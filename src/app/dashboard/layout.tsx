@@ -27,7 +27,7 @@ const navigation = [
   { name: 'Keywords', href: '/dashboard/keywords', icon: KeyIcon },
   { name: 'Blog Writer', href: '/dashboard/blog-writer', icon: DocumentTextIcon },
   { name: 'Analytics', href: '/dashboard/analytics', icon: ChartBarIcon },
-  { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },
+  { name: 'Settings', href: '/account-settings', icon: Cog6ToothIcon },
 ]
 
 export default function DashboardLayout({

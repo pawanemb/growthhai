@@ -12,12 +12,19 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
 
+  // Redirect to home if not authenticated and trying to access protected routes
   if (!session && !req.nextUrl.pathname.match(/^\/($|auth)/)) {
-    return NextResponse.redirect(new URL('/', req.url))
+    return NextResponse.redirect(new URL('/auth', req.url))
   }
 
+  // Redirect to dashboard if authenticated and trying to access auth pages
   if (session && (req.nextUrl.pathname === '/' || req.nextUrl.pathname === '/auth')) {
     return NextResponse.redirect(new URL('/dashboard', req.url))
+  }
+
+  // Allow access to account settings only for authenticated users
+  if (!session && req.nextUrl.pathname.startsWith('/account-settings')) {
+    return NextResponse.redirect(new URL('/auth', req.url))
   }
 
   return res
