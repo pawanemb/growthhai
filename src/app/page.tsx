@@ -1,23 +1,7 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-export const dynamic = 'force-dynamic'
-
-export default async function Home() {
-  try {
-    const supabase = createServerComponentClient({ cookies })
-    const { data: { session } } = await supabase.auth.getSession()
-
-    if (session) {
-      redirect('/dashboard')
-    }
-  } catch (error) {
-    console.error('Error checking session:', error)
-  }
-
+export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white text-gray-900">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">

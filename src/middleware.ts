@@ -5,31 +5,24 @@ import type { NextRequest } from 'next/server'
 export const runtime = 'experimental-edge'
 
 export async function middleware(req: NextRequest) {
-  try {
-    const res = NextResponse.next()
-    const supabase = createMiddlewareClient({ req, res })
+  const res = NextResponse.next()
+  const supabase = createMiddlewareClient({ req, res })
 
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
-    // If user is not signed in and the current path is not / or /auth redirect the user to /
-    if (!session && !req.nextUrl.pathname.match(/^\/($|auth)/)) {
-      return NextResponse.redirect(new URL('/', req.url))
-    }
-
-    // If user is signed in and the current path is / or /auth redirect the user to /dashboard
-    if (session && (req.nextUrl.pathname === '/' || req.nextUrl.pathname === '/auth')) {
-      return NextResponse.redirect(new URL('/dashboard', req.url))
-    }
-
-    return res
-  } catch (error) {
-    console.error('Error in middleware:', error)
-    return NextResponse.next()
+  if (!session && !req.nextUrl.pathname.match(/^\/($|auth)/)) {
+    return NextResponse.redirect(new URL('/', req.url))
   }
+
+  if (session && (req.nextUrl.pathname === '/' || req.nextUrl.pathname === '/auth')) {
+    return NextResponse.redirect(new URL('/dashboard', req.url))
+  }
+
+  return res
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.png$).*)', '/'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)'],
 }
