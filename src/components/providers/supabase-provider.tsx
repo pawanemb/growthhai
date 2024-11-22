@@ -24,9 +24,11 @@ export default function SupabaseProvider({
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
-  const supabase = createClientComponentClient<Database>()
 
+  // Move supabase client inside useEffect to prevent SSR issues
   useEffect(() => {
+    const supabase = createClientComponentClient<Database>()
+    
     const getUser = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser()
@@ -55,7 +57,7 @@ export default function SupabaseProvider({
     return () => {
       subscription.unsubscribe()
     }
-  }, [router, supabase])
+  }, [router])
 
   return (
     <Context.Provider value={{ user, isLoading }}>
