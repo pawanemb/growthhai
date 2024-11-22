@@ -1,24 +1,54 @@
 'use client'
 
-import { createClientComponentClient, type SupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
-import { createContext, useContext, useEffect } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
+import type { User } from '@supabase/auth-helpers-nextjs'
 import type { Database } from '@/types/supabase'
 
-const Context = createContext<SupabaseClient<Database> | undefined>(undefined)
+type SupabaseContextType = {
+  user: User | null
+  isLoading: boolean
+}
+
+const Context = createContext<SupabaseContextType>({
+  user: null,
+  isLoading: true,
+})
 
 export default function SupabaseProvider({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const supabase = createClientComponentClient<Database>()
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
+  const supabase = createClientComponentClient<Database>()
 
   useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        setUser(user)
+      } catch (error) {
+        console.error('Error getting user:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    getUser()
+
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setUser(session.user)
+      } else {
+        setUser(null)
+      }
+      setIsLoading(false)
       router.refresh()
     })
 
@@ -28,7 +58,7 @@ export default function SupabaseProvider({
   }, [router, supabase])
 
   return (
-    <Context.Provider value={supabase}>
+    <Context.Provider value={{ user, isLoading }}>
       {children}
     </Context.Provider>
   )

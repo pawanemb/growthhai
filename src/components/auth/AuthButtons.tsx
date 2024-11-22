@@ -4,19 +4,26 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'react-hot-toast'
+import type { Database } from '@/types/supabase'
+import { useSupabase } from '@/components/providers/supabase-provider'
 
 export default function AuthButtons() {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const supabase = createClientComponentClient()
+  const [isLoading, setIsLoading] = useState<string | null>(null)
+  const supabase = createClientComponentClient<Database>()
+  const { user } = useSupabase()
 
   const handleAuth = async (provider: 'google' | 'linkedin') => {
     try {
-      setIsLoading(true)
+      setIsLoading(provider)
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: `${location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       })
 
@@ -26,15 +33,42 @@ export default function AuthButtons() {
     } catch (error) {
       toast.error('An error occurred. Please try again.')
     } finally {
-      setIsLoading(false)
+      setIsLoading(null)
     }
+  }
+
+  const handleSignOut = async () => {
+    try {
+      setIsLoading('signout')
+      await supabase.auth.signOut()
+      router.refresh()
+      toast.success('Signed out successfully')
+    } catch (error) {
+      toast.error('Error signing out')
+    } finally {
+      setIsLoading(null)
+    }
+  }
+
+  if (user) {
+    return (
+      <div className="w-full max-w-sm">
+        <button
+          onClick={handleSignOut}
+          disabled={isLoading === 'signout'}
+          className="flex w-full items-center justify-center rounded-lg border border-transparent bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+        >
+          {isLoading === 'signout' ? 'Signing out...' : 'Sign out'}
+        </button>
+      </div>
+    )
   }
 
   return (
     <div className="w-full max-w-sm space-y-4">
       <button
         onClick={() => handleAuth('google')}
-        disabled={isLoading}
+        disabled={isLoading !== null}
         className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
       >
         <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -55,18 +89,18 @@ export default function AuthButtons() {
             fill="#EA4335"
           />
         </svg>
-        Continue with Google
+        {isLoading === 'google' ? 'Signing in...' : 'Continue with Google'}
       </button>
 
       <button
         onClick={() => handleAuth('linkedin')}
-        disabled={isLoading}
+        disabled={isLoading !== null}
         className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
       >
         <svg className="h-5 w-5 text-[#0A66C2]" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.68 1.68 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
         </svg>
-        Continue with LinkedIn
+        {isLoading === 'linkedin' ? 'Signing in...' : 'Continue with LinkedIn'}
       </button>
     </div>
   )
