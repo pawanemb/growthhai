@@ -2,7 +2,7 @@
   width: 100%;
   height: 100vh;
   position: relative;
-  background-color: #0f0f0f;
+  background-color: #f9fafb;
   overflow: hidden;
   line-height: normal;
   letter-spacing: normal;
@@ -13,42 +13,39 @@
 }
 
 .signup-container {
-  @apply flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 md:p-8;
-  background: radial-gradient(circle at top, #1a1a1a, #0f0f0f);
+  @apply flex min-h-screen items-center justify-center bg-gray-50 px-4;
 }
 
 .signup-card {
-  @apply w-full max-w-sm rounded-xl bg-black/30 p-5 sm:p-6 backdrop-blur-lg;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  @apply w-full max-w-sm space-y-6 rounded-lg bg-white p-6 shadow-sm;
 }
 
 .signup-header {
-  @apply mb-4 text-center;
+  @apply space-y-1;
 }
 
 .signup-header h1 {
-  @apply mb-1 text-xl font-bold text-white sm:text-2xl;
+  @apply text-center text-2xl font-semibold text-gray-900;
 }
 
 .signup-header p {
-  @apply text-xs text-gray-400 sm:text-sm;
+  @apply text-center text-sm text-gray-600;
 }
 
 .signup-form {
-  @apply space-y-3;
+  @apply space-y-4;
 }
 
 .form-group {
-  @apply space-y-1.5;
+  @apply space-y-1;
 }
 
 .form-group label {
-  @apply block text-sm font-medium text-gray-200;
+  @apply block text-sm font-medium text-gray-700;
 }
 
 .form-group input {
-  @apply h-9 w-full rounded-lg border border-gray-600 bg-gray-700/50 px-3 text-sm text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500;
+  @apply block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500;
 }
 
 .password-input-wrapper {
@@ -56,27 +53,27 @@
 }
 
 .password-toggle {
-  @apply absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-300;
+  @apply absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-500;
 }
 
 .terms-checkbox {
-  @apply mt-2 flex items-start space-x-2;
+  @apply flex items-start space-x-2;
 }
 
 .terms-checkbox input[type="checkbox"] {
-  @apply mt-0.5 h-4 w-4 rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-2 focus:ring-blue-500;
+  @apply mt-1 h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500;
 }
 
 .terms-checkbox label {
-  @apply text-xs text-gray-300 sm:text-sm;
+  @apply text-sm text-gray-600;
 }
 
 .terms-checkbox a {
-  @apply text-blue-500 hover:text-blue-400;
+  @apply font-medium text-blue-500 hover:text-blue-600;
 }
 
 .signup-button {
-  @apply h-9 w-full rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-800 disabled:opacity-50;
+  @apply w-full rounded-md bg-blue-500 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50;
 }
 
 .social-signup {
@@ -88,11 +85,11 @@
 }
 
 .social-buttons {
-  @apply flex flex-col gap-2 sm:flex-row sm:gap-3;
+  @apply grid grid-cols-2 gap-3;
 }
 
 .social-button {
-  @apply flex h-9 flex-1 items-center justify-center rounded-lg border border-gray-600 bg-gray-700/50 px-3 text-sm font-medium text-white transition-colors hover:bg-gray-600/50 focus:outline-none focus:ring-2 focus:ring-gray-500;
+  @apply flex items-center justify-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
 }
 
 .social-button svg {
@@ -100,17 +97,17 @@
 }
 
 .login-prompt {
-  @apply mt-4 text-center text-xs text-gray-400;
+  @apply mt-6 text-center text-sm text-gray-600;
 }
 
 .login-link {
-  @apply font-medium text-blue-500 hover:text-blue-400;
+  @apply font-medium text-blue-500 hover:text-blue-600;
 }
 
 /* Mobile-first responsive adjustments */
 @media (max-width: 640px) {
   .social-buttons {
-    @apply flex-col gap-2;
+    @apply grid grid-cols-1 gap-2;
   }
   
   .social-button {
@@ -320,25 +317,38 @@
 }
 
 .divider {
+  @apply relative my-6;
+}
+
+.divider::before {
+  content: "";
+  @apply absolute left-0 top-1/2 w-full border-t border-gray-200;
+}
+
+.divider-text {
+  @apply relative -mt-2 text-center;
+}
+
+.divider-text span {
+  @apply bg-white px-4 text-sm text-gray-500;
+}
+
+.links {
   align-self: stretch;
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(98, 98, 98, 0), rgba(98, 98, 98, 0.07));
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
   gap: 20px;
 }
 
-.line {
-  height: 2px;
-  flex: 1;
-  border-top: 2px solid #4d4d4d;
-}
-
-.social-buttons {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
+.link-group a,
+.link-group span {
+  color: inherit;
+  text-decoration: none;
 }
 
 .footer {
@@ -358,24 +368,6 @@
   color: #fff;
   text-decoration: none;
   font-weight: 500;
-}
-
-.links {
-  align-self: stretch;
-  border-radius: 6px;
-  background: linear-gradient(180deg, rgba(98, 98, 98, 0), rgba(98, 98, 98, 0.07));
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 6px;
-  gap: 20px;
-}
-
-.link-group a,
-.link-group span {
-  color: inherit;
-  text-decoration: none;
 }
 
 @media screen and (max-width: 767px) {

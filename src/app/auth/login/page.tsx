@@ -59,13 +59,13 @@ export default function Login() {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <h1>Welcome back!</h1>
-          <p>Sign in to continue to Growthh.ai</p>
+          <h1>Welcome back</h1>
+          <p>Sign in to your account</p>
         </div>
 
         <form onSubmit={handleLogin} className="login-form">
           <div className="form-group">
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="email">Email</label>
             <input
               id="email"
               type="email"
@@ -92,7 +92,7 @@ export default function Login() {
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                {showPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
               </button>
             </div>
           </div>
@@ -117,26 +117,29 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="social-login">
-          <p className="social-login-text">Or continue with</p>
-          <div className="social-buttons">
-            <button
-              type="button"
-              className="social-button"
-              onClick={() => handleSocialLogin('google')}
-            >
-              <FcGoogle />
-              Google
-            </button>
-            <button
-              type="button"
-              className="social-button"
-              onClick={() => handleSocialLogin('github')}
-            >
-              <FaGithub />
-              GitHub
-            </button>
+        <div className="divider">
+          <div className="divider-text">
+            <span>Or continue with</span>
           </div>
+        </div>
+
+        <div className="social-buttons">
+          <button
+            type="button"
+            className="social-button"
+            onClick={() => handleSocialLogin('google')}
+          >
+            <FcGoogle />
+            Google
+          </button>
+          <button
+            type="button"
+            className="social-button"
+            onClick={() => handleSocialLogin('github')}
+          >
+            <FaGithub />
+            GitHub
+          </button>
         </div>
 
         <p className="signup-prompt">

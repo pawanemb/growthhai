@@ -25,6 +25,12 @@ export default function Signup() {
     e.preventDefault()
     setLoading(true)
 
+    if (!acceptTerms) {
+      toast.error('Please accept the terms of service')
+      setLoading(false)
+      return
+    }
+
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -39,8 +45,8 @@ export default function Signup() {
 
       if (error) throw error
 
-      toast.success('Check your email to confirm your account!')
-      router.push('/auth/login')
+      router.push('/auth/verify-email')
+      toast.success('Please check your email to verify your account')
     } catch (error: any) {
       toast.error(error.message || 'Failed to sign up')
     } finally {
@@ -68,12 +74,12 @@ export default function Signup() {
       <div className="signup-card">
         <div className="signup-header">
           <h1>Create an account</h1>
-          <p>Join Growthh.ai and start growing your business</p>
+          <p>Get started with Growthh.ai</p>
         </div>
 
         <form onSubmit={handleSignup} className="signup-form">
           <div className="form-group">
-            <label htmlFor="fullName">Full Name</label>
+            <label htmlFor="fullName">Full name</label>
             <input
               id="fullName"
               type="text"
@@ -85,7 +91,7 @@ export default function Signup() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email address</label>
+            <label htmlFor="email">Email</label>
             <input
               id="email"
               type="email"
@@ -97,7 +103,7 @@ export default function Signup() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="companyName">Company Name</label>
+            <label htmlFor="companyName">Company name</label>
             <input
               id="companyName"
               type="text"
@@ -124,7 +130,7 @@ export default function Signup() {
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+                {showPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
               </button>
             </div>
           </div>
@@ -135,7 +141,6 @@ export default function Signup() {
               id="terms"
               checked={acceptTerms}
               onChange={(e) => setAcceptTerms(e.target.checked)}
-              required
             />
             <label htmlFor="terms">
               I agree to the{' '}
@@ -149,31 +154,34 @@ export default function Signup() {
             </label>
           </div>
 
-          <button type="submit" className="signup-button" disabled={loading || !acceptTerms}>
+          <button type="submit" className="signup-button" disabled={loading}>
             {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
 
-        <div className="social-signup">
-          <p className="social-signup-text">Or continue with</p>
-          <div className="social-buttons">
-            <button
-              type="button"
-              className="social-button"
-              onClick={() => handleSocialSignup('google')}
-            >
-              <FcGoogle />
-              Google
-            </button>
-            <button
-              type="button"
-              className="social-button"
-              onClick={() => handleSocialSignup('github')}
-            >
-              <FaGithub />
-              GitHub
-            </button>
+        <div className="divider">
+          <div className="divider-text">
+            <span>Or continue with</span>
           </div>
+        </div>
+
+        <div className="social-buttons">
+          <button
+            type="button"
+            className="social-button"
+            onClick={() => handleSocialSignup('google')}
+          >
+            <FcGoogle />
+            Google
+          </button>
+          <button
+            type="button"
+            className="social-button"
+            onClick={() => handleSocialSignup('github')}
+          >
+            <FaGithub />
+            GitHub
+          </button>
         </div>
 
         <p className="login-prompt">
