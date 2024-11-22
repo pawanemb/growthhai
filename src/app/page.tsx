@@ -40,17 +40,28 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="flex flex-col items-center gap-4"
+          className="flex flex-col items-center gap-6"
         >
           <p className="text-center text-2xl text-gray-900">
-            Get started today
+            Transform your content strategy today
           </p>
-          <Link
-            href="/auth"
-            className="rounded-md bg-indigo-600 px-8 py-3 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            Get Started
-          </Link>
+          <div className="flex gap-4">
+            <Link
+              href="/auth?mode=signup"
+              className="rounded-md bg-indigo-600 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Sign up
+            </Link>
+            <Link
+              href="/auth?mode=login"
+              className="rounded-md bg-white px-8 py-3 text-base font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Log in
+            </Link>
+          </div>
+          <p className="text-sm text-gray-500">
+            Start creating better content in minutes
+          </p>
         </motion.div>
       </div>
     </main>
