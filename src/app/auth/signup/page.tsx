@@ -1,28 +1,29 @@
 'use client'
 
 import { useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
-import { toast } from 'react-hot-toast'
 import Link from 'next/link'
-import Image from 'next/image'
-import AuthButtons from '@/components/auth/AuthButtons'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { FcGoogle } from 'react-icons/fc'
+import { FaGithub } from 'react-icons/fa'
+import { toast } from 'react-hot-toast'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import './signup.css'
 
-export default function SignupPage() {
-  const [isLoading, setIsLoading] = useState(false)
+export default function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
   const [companyName, setCompanyName] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [acceptTerms, setAcceptTerms] = useState(false)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const supabase = createClientComponentClient()
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
+    setLoading(true)
 
     try {
       const { error } = await supabase.auth.signUp({
@@ -36,142 +37,151 @@ export default function SignupPage() {
         },
       })
 
-      if (error) {
-        throw error
-      }
+      if (error) throw error
 
-      toast.success('Check your email to confirm your account')
+      toast.success('Check your email to confirm your account!')
       router.push('/auth/login')
-      router.refresh()
     } catch (error: any) {
-      toast.error(error.message)
+      toast.error(error.message || 'Failed to sign up')
     } finally {
-      setIsLoading(false)
+      setLoading(false)
+    }
+  }
+
+  const handleSocialSignup = async (provider: 'google' | 'github') => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+
+      if (error) throw error
+    } catch (error: any) {
+      toast.error(error.message || `Failed to sign up with ${provider}`)
     }
   }
 
   return (
-    <div className="signup">
-      <h1 className="welcome-text">Welcome to Growthh.ai</h1>
-      <div className="skip-the-lag-wrapper">
-        <h1 className="skip-the-lag">Skip the lag ?</h1>
-      </div>
-      <div className="circle-bg"></div>
-      <div className="circle-bg-2"></div>
-      
-      <div className="wrapper">
-        <div className="content">
-          <div className="form-section">
-            <div className="signup-text">
-              <h1 className="signup-heading">Sign Up</h1>
-              <div className="welcome-back">Start your journey with us!</div>
-            </div>
-            
-            <form onSubmit={handleSubmit} className="signup-form">
-              <div className="input-field">
-                <input
-                  className="input"
-                  placeholder="Full Name"
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                />
-              </div>
+    <div className="signup-container">
+      <div className="signup-card">
+        <div className="signup-header">
+          <h1>Create an account</h1>
+          <p>Join Growthh.ai and start growing your business</p>
+        </div>
 
-              <div className="input-field">
-                <input
-                  className="input"
-                  placeholder="Company Name"
-                  type="text"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  required
-                />
-              </div>
-              
-              <div className="input-field">
-                <input
-                  className="input"
-                  placeholder="Email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              
-              <div className="password-field">
-                <input
-                  className="input"
-                  placeholder="Password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="eye-icon"
-                >
-                  <Image
-                    src="/closed-eye.svg"
-                    alt={showPassword ? "Hide password" : "Show password"}
-                    width={18}
-                    height={18}
-                  />
-                </button>
-              </div>
+        <form onSubmit={handleSignup} className="signup-form">
+          <div className="form-group">
+            <label htmlFor="fullName">Full Name</label>
+            <input
+              id="fullName"
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
 
-              <div className="terms">
-                <input
-                  type="checkbox"
-                  checked={acceptTerms}
-                  onChange={(e) => setAcceptTerms(e.target.checked)}
-                  required
-                />
-                <span>I accept the Terms & Conditions</span>
-              </div>
-              
-              <div className="signup-button-section">
-                <button type="submit" className="signup-button" disabled={isLoading || !acceptTerms}>
-                  <span>{isLoading ? 'Creating account...' : 'Sign Up'}</span>
-                </button>
-              </div>
-            </form>
+          <div className="form-group">
+            <label htmlFor="email">Email address</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+            />
+          </div>
 
-            <div className="other-signup">
-              <div className="divider">
-                <div className="line"></div>
-                <span>Or</span>
-                <div className="line"></div>
-              </div>
-              <div className="social-buttons">
-                <AuthButtons />
-              </div>
+          <div className="form-group">
+            <label htmlFor="companyName">Company Name</label>
+            <input
+              id="companyName"
+              type="text"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              placeholder="Enter your company name"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <div className="password-input-wrapper">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Create a password"
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
+              </button>
             </div>
           </div>
-          
-          <div className="footer">
-            <div className="login-link">
-              <Link href="/auth/login">
-                Already have an account? Login
+
+          <div className="terms-checkbox">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={acceptTerms}
+              onChange={(e) => setAcceptTerms(e.target.checked)}
+              required
+            />
+            <label htmlFor="terms">
+              I agree to the{' '}
+              <Link href="/terms" target="_blank">
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link href="/privacy" target="_blank">
+                Privacy Policy
               </Link>
-            </div>
-            <div className="links">
-              <div className="link-group">
-                <Link href="/terms">Terms & Conditions</Link>
-              </div>
-              <div className="link-group">
-                <Link href="/support">Support</Link>
-              </div>
-              <div className="link-group">
-                <span>Customer Care</span>
-              </div>
-            </div>
+            </label>
+          </div>
+
+          <button type="submit" className="signup-button" disabled={loading || !acceptTerms}>
+            {loading ? 'Creating account...' : 'Create account'}
+          </button>
+        </form>
+
+        <div className="social-signup">
+          <p className="social-signup-text">Or continue with</p>
+          <div className="social-buttons">
+            <button
+              type="button"
+              className="social-button"
+              onClick={() => handleSocialSignup('google')}
+            >
+              <FcGoogle />
+              Google
+            </button>
+            <button
+              type="button"
+              className="social-button"
+              onClick={() => handleSocialSignup('github')}
+            >
+              <FaGithub />
+              GitHub
+            </button>
           </div>
         </div>
+
+        <p className="login-prompt">
+          Already have an account?{' '}
+          <Link href="/auth/login" className="login-link">
+            Sign in
+          </Link>
+        </p>
       </div>
     </div>
   )
