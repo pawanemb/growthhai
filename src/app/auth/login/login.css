@@ -1,0 +1,437 @@
+.skip-the-lag,
+.welcome-back {
+  margin: 0;
+  font-size: inherit;
+  font-weight: 600;
+  font-family: inherit;
+}
+.welcome-back {
+  position: absolute;
+  top: 393.8px;
+  left: 60px;
+  display: inline-block;
+  width: 758px;
+  height: 108.6px;
+}
+.skip-the-lag {
+  position: relative;
+  font-style: italic;
+}
+.skip-the-lag-wrapper {
+  position: absolute;
+  top: 512px;
+  left: 82px;
+  border: 4px solid #fff;
+  box-sizing: border-box;
+  width: 244px;
+  height: 80px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 14px 23px 14px 24px;
+  font-size: 32px;
+}
+.div {
+  position: absolute;
+  top: 81px;
+  left: 749px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #530061, #0d0a30);
+  width: 302px;
+  height: 302px;
+}
+.thank-you-for-your-patience-pl {
+  position: absolute;
+  top: 824.77px;
+  left: 1169.8px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #300061, #0a1030);
+  width: 220px;
+  height: 220px;
+  transform: rotate(-28.5deg);
+  transform-origin: 0 0;
+}
+.login1 {
+  margin: 0;
+  position: relative;
+  font-size: inherit;
+  font-weight: 600;
+  font-family: inherit;
+}
+.glad-youre-back {
+  position: relative;
+  font-size: 16px;
+  font-weight: 500;
+}
+.login-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.username1 {
+  width: 99px;
+  border: 0;
+  outline: 0;
+  font-family: "Noto Sans";
+  font-size: 20px;
+  background-color: transparent;
+  position: relative;
+  color: #fff;
+  text-align: left;
+  display: inline-block;
+  padding: 0;
+}
+.username {
+  align-self: stretch;
+  height: 55px;
+  border-radius: 12px;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px 16px;
+}
+.password1 {
+  width: 92px;
+  border: 0;
+  outline: 0;
+  font-family: "Noto Sans";
+  font-size: 20px;
+  background-color: transparent;
+  position: relative;
+  color: #fff;
+  text-align: left;
+  display: inline-block;
+  padding: 0;
+}
+.closed-eye-icon {
+  height: 18px;
+  width: 18px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.password {
+  align-self: stretch;
+  flex: 1;
+  border-radius: 12px;
+  border: 1px solid #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  gap: 20px;
+}
+.fluentcheckbox-checked-16-fil {
+  margin: 0;
+  height: 18px;
+  width: 18px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.remember-me {
+  position: relative;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: "Noto Sans";
+  color: #fff;
+  text-align: left;
+  display: inline-block;
+  min-width: 115px;
+}
+.password-rem,
+.remember {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+}
+.password-rem {
+  align-self: stretch;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.login3 {
+  position: relative;
+  font-size: 20px;
+  font-weight: 600;
+  font-family: "Noto Sans";
+  color: #fff;
+  text-align: left;
+  display: inline-block;
+  min-width: 56px;
+}
+.login2 {
+  cursor: pointer;
+  border: 0;
+  padding: 14px 172px;
+  background-color: transparent;
+  border-radius: 12px;
+  background: linear-gradient(90.57deg, #628eff, #8740cd 53.13%, #570475);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.forgot-password {
+  position: relative;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: "Noto Sans";
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+}
+.credentials,
+.login-bt-fp,
+.upper-section {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+.login-bt-fp {
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.credentials,
+.upper-section {
+  flex: 1;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.credentials {
+  margin: 0;
+  gap: 25px;
+}
+.upper-section {
+  gap: 14px;
+}
+.div2 {
+  height: 2px;
+  flex: 1;
+  border-top: 2px solid #4d4d4d;
+  box-sizing: border-box;
+}
+.div2,
+.or-child,
+.or1 {
+  position: relative;
+}
+.or1 {
+  font-weight: 500;
+  display: inline-block;
+  min-width: 21px;
+}
+.or-child {
+  height: 2px;
+  flex: 1;
+  border-top: 2px solid #4d4d4d;
+  box-sizing: border-box;
+}
+.or {
+  align-self: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+}
+.bigithub-icon,
+.devicongoogle,
+.logosfacebook-icon {
+  height: 42px;
+  width: 42px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.div3 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.other-logins,
+.table {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.other-logins {
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  color: #4d4d4d;
+}
+.table {
+  flex: 1;
+  align-items: flex-start;
+  gap: 47px;
+}
+.dont-have-an {
+  position: relative;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+}
+.terms-conditions {
+  text-decoration: none;
+  position: relative;
+  color: inherit;
+}
+.div4 {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.support {
+  text-decoration: none;
+  position: relative;
+  color: inherit;
+  display: inline-block;
+  min-width: 62px;
+}
+.support-options {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.customer-care1 {
+  position: relative;
+  display: inline-block;
+  min-width: 114px;
+}
+.customer-care,
+.customer-care-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.customer-care {
+  align-self: stretch;
+  border-radius: 6px;
+  background: linear-gradient(
+    180deg,
+    rgba(98, 98, 98, 0),
+    rgba(98, 98, 98, 0.07)
+  );
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  gap: 20px;
+}
+.div1,
+.dont-have-an-account-signup-parent {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.dont-have-an-account-signup-parent {
+  gap: 8px;
+  top: 0;
+  z-index: 99;
+  position: sticky;
+  font-size: 16px;
+}
+.div1 {
+  flex: 1;
+  gap: 101px;
+  max-width: 100%;
+}
+.login-child,
+.wrapper {
+  position: absolute;
+  box-sizing: border-box;
+}
+.wrapper {
+  top: calc(50% - 398px);
+  right: 58px;
+  box-shadow: -8px 4px 5px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(53px);
+  border-radius: 20px;
+  background: linear-gradient(-38.77deg, rgba(191, 191, 191, 0.06), transparent),
+    rgba(0, 0, 0, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  width: 482px;
+  height: 798px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 97px 40px 47px;
+  max-width: 100%;
+  z-index: 1;
+  font-size: 36px;
+}
+.login-child {
+  top: 550px;
+  left: 330px;
+  border-top: 2px dashed #4d4d4d;
+  width: 563px;
+  height: 2px;
+}
+.login {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  background-color: #0f0f0f;
+  overflow: hidden;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  font-size: 96px;
+  color: #fff;
+  font-family: "Noto Sans";
+}
+
+@media screen and (max-width: 767px) {
+  .welcome-back {
+    font-size: 48px;
+  }
+  .skip-the-lag {
+    font-size: 26px;
+  }
+  .login1 {
+    font-size: 29px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .welcome-back {
+    font-size: 29px;
+  }
+  .skip-the-lag {
+    font-size: 19px;
+  }
+  .login1 {
+    font-size: 22px;
+  }
+  .login3,
+  .password1,
+  .username1 {
+    font-size: 16px;
+  }
+}
