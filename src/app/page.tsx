@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-export const runtime = 'experimental-edge'
 export const dynamic = 'force-dynamic'
 
 export default async function Home() {
