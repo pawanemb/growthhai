@@ -1,29 +1,50 @@
 import './globals.css'
-import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { Toaster } from 'react-hot-toast'
 import SupabaseProvider from '@/components/providers/supabase-provider'
+import { Toaster } from 'react-hot-toast'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
+import { Database } from '@/types/supabase'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: 'Growthh.ai - SEO Content Platform',
-  description: 'AI-powered SEO content generation platform',
-}
+export const dynamic = 'force-dynamic'
 
-export default function RootLayout({
+async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-        <SupabaseProvider>
-          {children}
-          <Toaster position="top-right" />
-        </SupabaseProvider>
-      </body>
-    </html>
-  )
+  const supabase = createServerComponentClient<Database>({ cookies })
+
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+
+    return (
+      <html lang="en">
+        <body className={inter.className}>
+          <SupabaseProvider>
+            {children}
+            <Toaster />
+          </SupabaseProvider>
+        </body>
+      </html>
+    )
+  } catch (error) {
+    console.error('Error in RootLayout:', error)
+    return (
+      <html lang="en">
+        <body className={inter.className}>
+          <SupabaseProvider>
+            {children}
+            <Toaster />
+          </SupabaseProvider>
+        </body>
+      </html>
+    )
+  }
 }
+
+export default RootLayout

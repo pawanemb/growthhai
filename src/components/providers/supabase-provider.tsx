@@ -24,28 +24,13 @@ export default function SupabaseProvider({
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
+  const supabase = createClientComponentClient<Database>()
 
-  // Move supabase client inside useEffect to prevent SSR issues
   useEffect(() => {
-    const supabase = createClientComponentClient<Database>()
-    
-    const getUser = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser()
-        setUser(user)
-      } catch (error) {
-        console.error('Error getting user:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    getUser()
-
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user) {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
         setUser(session.user)
       } else {
         setUser(null)
@@ -54,10 +39,25 @@ export default function SupabaseProvider({
       router.refresh()
     })
 
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          setUser(session.user)
+        }
+      } catch (error) {
+        console.error('Error initializing auth:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    initializeAuth()
+
     return () => {
       subscription.unsubscribe()
     }
-  }, [router])
+  }, [router, supabase])
 
   return (
     <Context.Provider value={{ user, isLoading }}>
