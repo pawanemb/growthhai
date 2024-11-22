@@ -13,204 +13,108 @@
 }
 
 .signup-container {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
+  @apply flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 md:p-8;
   background: radial-gradient(circle at top, #1a1a1a, #0f0f0f);
 }
 
 .signup-card {
-  width: 100%;
-  max-width: 482px;
-  border-radius: 20px;
-  background: linear-gradient(-38.77deg, rgba(191, 191, 191, 0.06), transparent), rgba(0, 0, 0, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  padding: 97px 40px 47px;
-  box-shadow: -8px 4px 5px rgba(0, 0, 0, 0.24);
-  backdrop-filter: blur(53px);
-  box-sizing: border-box;
-  z-index: 1;
-  font-size: 36px;
+  @apply w-full max-w-sm rounded-xl bg-black/30 p-5 sm:p-6 backdrop-blur-lg;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .signup-header {
-  margin-bottom: 36px;
-  text-align: center;
+  @apply mb-4 text-center;
 }
 
 .signup-header h1 {
-  margin-bottom: 8px;
-  font-size: 29px;
-  font-weight: 600;
-  font-family: "Noto Sans";
-  color: #fff;
+  @apply mb-1 text-xl font-bold text-white sm:text-2xl;
 }
 
 .signup-header p {
-  font-size: 16px;
-  font-weight: 500;
-  font-family: "Noto Sans";
-  color: #4d4d4d;
+  @apply text-xs text-gray-400 sm:text-sm;
 }
 
 .signup-form {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  @apply space-y-3;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  @apply space-y-1.5;
 }
 
 .form-group label {
-  font-size: 16px;
-  font-weight: 500;
-  font-family: "Noto Sans";
-  color: #fff;
+  @apply block text-sm font-medium text-gray-200;
 }
 
 .form-group input {
-  width: 100%;
-  height: 55px;
-  border-radius: 12px;
-  border: 1px solid #fff;
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 12px 16px;
-  font-size: 20px;
-  font-family: "Noto Sans";
-  color: #fff;
+  @apply h-9 w-full rounded-lg border border-gray-600 bg-gray-700/50 px-3 text-sm text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500;
 }
 
 .password-input-wrapper {
-  position: relative;
+  @apply relative;
 }
 
 .password-toggle {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #4d4d4d;
+  @apply absolute right-2.5 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-300;
 }
 
 .terms-checkbox {
-  margin-top: 24px;
-  display: flex;
-  align-items: flex-start;
+  @apply mt-2 flex items-start space-x-2;
 }
 
 .terms-checkbox input[type="checkbox"] {
-  margin-top: 4px;
-  height: 18px;
-  width: 18px;
-  border-radius: 4px;
-  border: 1px solid #fff;
-  background-color: rgba(255, 255, 255, 0.1);
+  @apply mt-0.5 h-4 w-4 rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-2 focus:ring-blue-500;
 }
 
 .terms-checkbox label {
-  margin-left: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  font-family: "Noto Sans";
-  color: #4d4d4d;
+  @apply text-xs text-gray-300 sm:text-sm;
 }
 
 .terms-checkbox a {
-  color: #fff;
+  @apply text-blue-500 hover:text-blue-400;
 }
 
 .signup-button {
-  width: 100%;
-  border-radius: 12px;
-  background: linear-gradient(90.57deg, #628eff, #8740cd 53.13%, #570475);
-  padding: 14px 172px;
-  font-size: 20px;
-  font-weight: 600;
-  font-family: "Noto Sans";
-  color: #fff;
-  cursor: pointer;
+  @apply h-9 w-full rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-800 disabled:opacity-50;
 }
 
 .social-signup {
-  margin-top: 36px;
+  @apply mt-4;
 }
 
 .social-signup-text {
-  margin-bottom: 16px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  font-family: "Noto Sans";
-  color: #4d4d4d;
+  @apply mb-3 text-center text-xs text-gray-400;
 }
 
 .social-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  @apply flex flex-col gap-2 sm:flex-row sm:gap-3;
 }
 
 .social-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  border: 1px solid #fff;
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 12px 16px;
-  font-size: 20px;
-  font-weight: 500;
-  font-family: "Noto Sans";
-  color: #fff;
-  cursor: pointer;
+  @apply flex h-9 flex-1 items-center justify-center rounded-lg border border-gray-600 bg-gray-700/50 px-3 text-sm font-medium text-white transition-colors hover:bg-gray-600/50 focus:outline-none focus:ring-2 focus:ring-gray-500;
 }
 
 .social-button svg {
-  margin-right: 8px;
-  height: 18px;
-  width: 18px;
+  @apply mr-2 h-4 w-4;
 }
 
 .login-prompt {
-  margin-top: 36px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  font-family: "Noto Sans";
-  color: #4d4d4d;
+  @apply mt-4 text-center text-xs text-gray-400;
 }
 
 .login-link {
-  font-weight: 500;
-  font-family: "Noto Sans";
-  color: #fff;
+  @apply font-medium text-blue-500 hover:text-blue-400;
 }
 
 /* Mobile-first responsive adjustments */
 @media (max-width: 640px) {
   .social-buttons {
-    flex-direction: column;
-    gap: 12px;
+    @apply flex-col gap-2;
   }
   
   .social-button {
-    width: 100%;
-  }
-  
-  .signup-card {
-    margin: 0 16px;
-  }
-  
-  .terms-checkbox label {
-    font-size: 14px;
+    @apply w-full;
   }
 }
 
