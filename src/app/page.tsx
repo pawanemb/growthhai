@@ -4,12 +4,19 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-export default async function Home() {
-  const supabase = createServerComponentClient({ cookies })
-  const { data: { session } } = await supabase.auth.getSession()
+export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
 
-  if (session) {
-    redirect('/dashboard')
+export default async function Home() {
+  try {
+    const supabase = createServerComponentClient({ cookies })
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (session) {
+      redirect('/dashboard')
+    }
+  } catch (error) {
+    console.error('Error checking session:', error)
   }
 
   return (
