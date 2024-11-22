@@ -1,7 +1,7 @@
-import AuthButtons from '@/components/auth/AuthButtons'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
 export default async function Home() {
   const supabase = createServerComponentClient({ cookies })
@@ -33,12 +33,23 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex flex-col items-center gap-4">
-            <p className="text-center text-2xl text-white">
-              Get started by signing in
-            </p>
-            <AuthButtons />
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-center text-2xl text-white">
+            Get started today
+          </p>
+          <div className="flex gap-4">
+            <Link
+              href="/auth/signup"
+              className="rounded-md bg-blue-600 px-8 py-3 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              Sign up
+            </Link>
+            <Link
+              href="/auth/login"
+              className="rounded-md bg-white/10 px-8 py-3 text-sm font-medium text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/20 focus:ring-offset-2"
+            >
+              Sign in
+            </Link>
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast'
 import Link from 'next/link'
 import AuthButtons from '@/components/auth/AuthButtons'
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -19,18 +19,20 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: `${location.origin}/auth/callback`,
+        },
       })
 
       if (error) {
         throw error
       }
 
-      toast.success('Logged in successfully')
-      router.push('/dashboard')
-      router.refresh()
+      toast.success('Check your email to confirm your account')
+      router.push('/auth/login')
     } catch (error: any) {
       toast.error(error.message)
     } finally {
@@ -42,8 +44,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] px-4 text-white">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold">Welcome Back</h1>
-          <p className="mt-2 text-gray-300">Sign in to your account</p>
+          <h1 className="text-4xl font-bold">Create Account</h1>
+          <p className="mt-2 text-gray-300">Sign up for a new account</p>
         </div>
 
         <div className="mt-8 space-y-6">
@@ -73,12 +75,12 @@ export default function LoginPage() {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                placeholder="Enter your password"
+                placeholder="Create a password"
               />
             </div>
 
@@ -87,7 +89,7 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? 'Creating account...' : 'Create account'}
             </button>
           </form>
 
@@ -103,8 +105,8 @@ export default function LoginPage() {
           <AuthButtons />
 
           <div className="text-center text-sm">
-            <Link href="/auth/signup" className="text-blue-400 hover:text-blue-500">
-              Don't have an account? Sign up
+            <Link href="/auth/login" className="text-blue-400 hover:text-blue-500">
+              Already have an account? Sign in
             </Link>
           </div>
         </div>
