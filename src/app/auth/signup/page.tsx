@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { FcGoogle } from 'react-icons/fc'
-import { FaGithub } from 'react-icons/fa'
+import { FaLinkedin } from 'react-icons/fa'
 import { toast } from 'react-hot-toast'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
-import './signup.css'
+import styles from './signup.module.css'
 
 export default function Signup() {
   const [email, setEmail] = useState('')
@@ -54,7 +54,7 @@ export default function Signup() {
     }
   }
 
-  const handleSocialSignup = async (provider: 'google' | 'github') => {
+  const handleSocialSignup = async (provider: 'google' | 'linkedin') => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
@@ -70,15 +70,15 @@ export default function Signup() {
   }
 
   return (
-    <div className="signup-container">
-      <div className="signup-card">
-        <div className="signup-header">
+    <div className={styles['signup-container']}>
+      <div className={styles['signup-card']}>
+        <div className={styles['signup-header']}>
           <h1>Create an account</h1>
           <p>Get started with Growthh.ai</p>
         </div>
 
-        <form onSubmit={handleSignup} className="signup-form">
-          <div className="form-group">
+        <form onSubmit={handleSignup} className={styles['signup-form']}>
+          <div className={styles['form-group']}>
             <label htmlFor="fullName">Full name</label>
             <input
               id="fullName"
@@ -90,7 +90,7 @@ export default function Signup() {
             />
           </div>
 
-          <div className="form-group">
+          <div className={styles['form-group']}>
             <label htmlFor="email">Email</label>
             <input
               id="email"
@@ -102,7 +102,7 @@ export default function Signup() {
             />
           </div>
 
-          <div className="form-group">
+          <div className={styles['form-group']}>
             <label htmlFor="companyName">Company name</label>
             <input
               id="companyName"
@@ -114,9 +114,9 @@ export default function Signup() {
             />
           </div>
 
-          <div className="form-group">
+          <div className={styles['form-group']}>
             <label htmlFor="password">Password</label>
-            <div className="password-input-wrapper">
+            <div className={styles['password-input-wrapper']}>
               <input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
@@ -127,7 +127,7 @@ export default function Signup() {
               />
               <button
                 type="button"
-                className="password-toggle"
+                className={styles['password-toggle']}
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
@@ -135,7 +135,7 @@ export default function Signup() {
             </div>
           </div>
 
-          <div className="terms-checkbox">
+          <div className={styles['terms-checkbox']}>
             <input
               type="checkbox"
               id="terms"
@@ -154,21 +154,21 @@ export default function Signup() {
             </label>
           </div>
 
-          <button type="submit" className="signup-button" disabled={loading}>
+          <button type="submit" className={styles['signup-button']} disabled={loading}>
             {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
 
-        <div className="divider">
-          <div className="divider-text">
+        <div className={styles.divider}>
+          <div className={styles['divider-text']}>
             <span>Or continue with</span>
           </div>
         </div>
 
-        <div className="social-buttons">
+        <div className={styles['social-buttons']}>
           <button
             type="button"
-            className="social-button"
+            className={styles['social-button']}
             onClick={() => handleSocialSignup('google')}
           >
             <FcGoogle />
@@ -176,17 +176,17 @@ export default function Signup() {
           </button>
           <button
             type="button"
-            className="social-button"
-            onClick={() => handleSocialSignup('github')}
+            className={styles['social-button']}
+            onClick={() => handleSocialSignup('linkedin')}
           >
-            <FaGithub />
-            GitHub
+            <FaLinkedin className="text-[#0A66C2]" />
+            LinkedIn
           </button>
         </div>
 
-        <p className="login-prompt">
+        <p className={styles['login-prompt']}>
           Already have an account?{' '}
-          <Link href="/auth/login" className="login-link">
+          <Link href="/auth/login" className={styles['login-link']}>
             Sign in
           </Link>
         </p>

@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { FcGoogle } from 'react-icons/fc'
-import { FaGithub } from 'react-icons/fa'
+import { FaLinkedin } from 'react-icons/fa'
 import { toast } from 'react-hot-toast'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
-import './login.css'
+import styles from './login.module.css'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -40,7 +40,7 @@ export default function Login() {
     }
   }
 
-  const handleSocialLogin = async (provider: 'google' | 'github') => {
+  const handleSocialLogin = async (provider: 'google' | 'linkedin') => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
@@ -56,15 +56,15 @@ export default function Login() {
   }
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <div className="login-header">
+    <div className={styles['login-container']}>
+      <div className={styles['login-card']}>
+        <div className={styles['login-header']}>
           <h1>Welcome back</h1>
           <p>Sign in to your account</p>
         </div>
 
-        <form onSubmit={handleLogin} className="login-form">
-          <div className="form-group">
+        <form onSubmit={handleLogin} className={styles['login-form']}>
+          <div className={styles['form-group']}>
             <label htmlFor="email">Email</label>
             <input
               id="email"
@@ -76,9 +76,9 @@ export default function Login() {
             />
           </div>
 
-          <div className="form-group">
+          <div className={styles['form-group']}>
             <label htmlFor="password">Password</label>
-            <div className="password-input-wrapper">
+            <div className={styles['password-input-wrapper']}>
               <input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
@@ -89,7 +89,7 @@ export default function Login() {
               />
               <button
                 type="button"
-                className="password-toggle"
+                className={styles['password-toggle']}
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
@@ -97,8 +97,8 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="remember-forgot">
-            <div className="remember-me">
+          <div className={styles['remember-forgot']}>
+            <div className={styles['remember-me']}>
               <input
                 type="checkbox"
                 id="remember"
@@ -107,26 +107,26 @@ export default function Login() {
               />
               <label htmlFor="remember">Remember me</label>
             </div>
-            <Link href="/auth/forgot-password" className="forgot-password">
+            <Link href="/auth/forgot-password" className={styles['forgot-password']}>
               Forgot password?
             </Link>
           </div>
 
-          <button type="submit" className="login-button" disabled={loading}>
+          <button type="submit" className={styles['login-button']} disabled={loading}>
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <div className="divider">
-          <div className="divider-text">
+        <div className={styles.divider}>
+          <div className={styles['divider-text']}>
             <span>Or continue with</span>
           </div>
         </div>
 
-        <div className="social-buttons">
+        <div className={styles['social-buttons']}>
           <button
             type="button"
-            className="social-button"
+            className={styles['social-button']}
             onClick={() => handleSocialLogin('google')}
           >
             <FcGoogle />
@@ -134,17 +134,17 @@ export default function Login() {
           </button>
           <button
             type="button"
-            className="social-button"
-            onClick={() => handleSocialLogin('github')}
+            className={styles['social-button']}
+            onClick={() => handleSocialLogin('linkedin')}
           >
-            <FaGithub />
-            GitHub
+            <FaLinkedin className="text-[#0A66C2]" />
+            LinkedIn
           </button>
         </div>
 
-        <p className="signup-prompt">
+        <p className={styles['signup-prompt']}>
           Don't have an account?{' '}
-          <Link href="/auth/signup" className="signup-link">
+          <Link href="/auth/signup" className={styles['signup-link']}>
             Sign up
           </Link>
         </p>
