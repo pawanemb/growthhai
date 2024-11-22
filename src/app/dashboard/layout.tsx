@@ -11,10 +11,15 @@ import {
   Bars3Icon,
   KeyIcon,
   DocumentDuplicateIcon,
+  ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { useSupabase } from '@/components/providers/supabase-provider'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useRouter } from 'next/navigation'
+import { toast } from 'react-hot-toast'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
@@ -32,6 +37,19 @@ export default function DashboardLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
+  const { user } = useSupabase()
+  const supabase = createClientComponentClient()
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut()
+      toast.success('Signed out successfully')
+      router.push('/')
+    } catch (error) {
+      toast.error('Error signing out')
+    }
+  }
 
   return (
     <div>
@@ -123,6 +141,18 @@ export default function DashboardLayout({
                           ))}
                         </ul>
                       </li>
+                      <li className="mt-auto">
+                        <button
+                          onClick={handleSignOut}
+                          className="group -mx-2 flex w-full gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-blue-600"
+                        >
+                          <ArrowRightOnRectangleIcon
+                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-blue-600"
+                            aria-hidden="true"
+                          />
+                          Sign out
+                        </button>
+                      </li>
                     </ul>
                   </nav>
                 </div>
@@ -170,6 +200,27 @@ export default function DashboardLayout({
                   ))}
                 </ul>
               </li>
+              <li className="mt-auto">
+                <div className="flex items-center gap-x-4 px-2 py-3 text-sm font-semibold leading-6 text-gray-900">
+                  <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
+                    {user?.email?.[0].toUpperCase()}
+                  </div>
+                  <span className="sr-only">Your profile</span>
+                  <div className="flex flex-col">
+                    <span aria-hidden="true">{user?.email}</span>
+                  </div>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="group -mx-2 mt-2 flex w-full gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-blue-600"
+                >
+                  <ArrowRightOnRectangleIcon
+                    className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-blue-600"
+                    aria-hidden="true"
+                  />
+                  Sign out
+                </button>
+              </li>
             </ul>
           </nav>
         </div>
@@ -186,10 +237,25 @@ export default function DashboardLayout({
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
 
+          {/* Separator */}
+          <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
+
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex flex-1"></div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
-              {/* Profile dropdown can be added here */}
+              {/* Profile dropdown */}
+              <div className="relative">
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-x-2 rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 lg:hidden"
+                >
+                  <ArrowRightOnRectangleIcon
+                    className="h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  Sign out
+                </button>
+              </div>
             </div>
           </div>
         </div>
