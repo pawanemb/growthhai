@@ -21,6 +21,12 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   clearError: () => set({ error: null }),
 
   fetchProjects: async () => {
+    // Don't set loading if we already have projects
+    const currentProjects = get().projects
+    if (currentProjects.length > 0) {
+      return
+    }
+    
     set({ isLoading: true, error: null })
     try {
       const { data: user } = await supabase.auth.getUser()
