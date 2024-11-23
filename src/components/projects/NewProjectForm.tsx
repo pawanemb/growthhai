@@ -1,9 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { GlobeAltIcon, TagIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
+import { GlobeAltIcon, TagIcon } from '@heroicons/react/24/outline'
+import Modal from '../ui/Modal'
 import '../../styles/form.css'
+
+interface NewProjectFormProps {
+  isOpen: boolean
+  onClose: () => void
+}
 
 interface FormData {
   name: string
@@ -18,7 +24,7 @@ interface FormData {
   }
 }
 
-export default function NewProjectForm() {
+export default function NewProjectForm({ isOpen, onClose }: NewProjectFormProps) {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
@@ -78,7 +84,8 @@ export default function NewProjectForm() {
     try {
       // TODO: Implement project creation logic with Supabase
       await new Promise((resolve) => setTimeout(resolve, 1000))
-      router.push('/dashboard')
+      router.refresh()
+      onClose()
     } catch (error) {
       console.error('Error creating project:', error)
     } finally {
@@ -89,88 +96,119 @@ export default function NewProjectForm() {
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 3))
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1))
 
+  const handleClose = () => {
+    setCurrentStep(1)
+    setFormData({
+      name: '',
+      url: '',
+      services: ['AI-Powered SEO', 'Revenue Generation'],
+      demographics: {
+        age: ['Young Adults (18-24 years old)', 'Adults (25-49 years old)'],
+        industry: ['Technology', 'Marketing & Advertising'],
+        gender: ['Male', 'Female', 'Others'],
+        languages: ['English'],
+        location: ['Canada']
+      }
+    })
+    onClose()
+  }
+
   return (
-    <div className="container">
-      <div className="progress-fill" style={{ width: `${(currentStep - 1) * 50}%` }} />
-      <div className="steps">
-        <div className={`step ${currentStep >= 1 ? 'active' : ''}`}>1</div>
-        <div className={`step ${currentStep >= 2 ? 'active' : ''}`}>2</div>
-        <div className={`step ${currentStep >= 3 ? 'active' : ''}`}>3</div>
-      </div>
+    <Modal isOpen={isOpen} onClose={handleClose} title="Create New Project">
+      <div className="relative">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gray-200">
+          <div 
+            className="h-full bg-indigo-600 transition-all duration-300" 
+            style={{ width: `${((currentStep - 1) / 2) * 100}%` }} 
+          />
+        </div>
 
-      <form id="msform" onSubmit={handleSubmit}>
-        {/* Step 1: Project Details */}
-        <div className={`form-step ${currentStep === 1 ? 'active' : ''}`}>
-          <div className="step-content">
-            <h2 className="step-title">Project Details</h2>
-            <p className="step-subtitle">Please fill the details about your project</p>
+        <div className="flex justify-between items-center mb-8 mt-6">
+          <div className="flex space-x-8">
+            {[1, 2, 3].map((step) => (
+              <div
+                key={step}
+                className={`flex items-center ${currentStep >= step ? 'text-indigo-600' : 'text-gray-400'}`}
+              >
+                <span className={`flex items-center justify-center w-8 h-8 border-2 rounded-full font-semibold text-sm
+                  ${currentStep >= step ? 'border-indigo-600 bg-indigo-50' : 'border-gray-300'}`}
+                >
+                  {step}
+                </span>
+                <span className="ml-2 font-medium">
+                  {step === 1 ? 'Details' : step === 2 ? 'Services' : 'Audience'}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
 
-            <div className="form-group">
-              <label htmlFor="name">Project Name</label>
-              <div className="relative">
-                <TagIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <form onSubmit={handleSubmit} className="mt-6">
+          {/* Step 1: Project Details */}
+          <div className={`space-y-6 ${currentStep !== 1 && 'hidden'}`}>
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                Project Name
+              </label>
+              <div className="mt-1 relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <TagIcon className="h-5 w-5 text-gray-400" />
+                </div>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  className="form-input pl-10"
-                  placeholder="Enter your project name"
+                  required
                   value={formData.name}
                   onChange={handleInputChange}
-                  required
-                  minLength={3}
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Enter your project name"
                 />
               </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="url">Website URL</label>
-              <div className="relative">
-                <GlobeAltIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <div>
+              <label htmlFor="url" className="block text-sm font-medium text-gray-700">
+                Website URL
+              </label>
+              <div className="mt-1 relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <GlobeAltIcon className="h-5 w-5 text-gray-400" />
+                </div>
                 <input
                   type="url"
                   id="url"
                   name="url"
-                  className="form-input pl-10"
-                  placeholder="example.com"
+                  required
                   value={formData.url}
                   onChange={handleInputChange}
-                  required
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="https://example.com"
                 />
               </div>
             </div>
-
-            <div className="button-group">
-              <div></div>
-              <button type="button" className="btn btn-primary" onClick={nextStep}>
-                Next
-              </button>
-            </div>
           </div>
-        </div>
 
-        {/* Step 2: Services */}
-        <div className={`form-step ${currentStep === 2 ? 'active' : ''}`}>
-          <div className="step-content">
-            <h2 className="step-title">Project Services</h2>
-            <p className="step-subtitle">Add the services you want to include</p>
-
+          {/* Step 2: Services */}
+          <div className={`space-y-6 ${currentStep !== 2 && 'hidden'}`}>
             <div className="space-y-4">
               {formData.services.map((service, index) => (
                 <div key={index} className="flex items-center space-x-2">
                   <input
                     type="text"
-                    className="form-input flex-1"
                     value={service}
                     onChange={(e) => handleServiceChange(index, e.target.value)}
+                    className="block flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     placeholder="Enter service name"
                   />
                   <button
                     type="button"
-                    className="text-red-500 hover:text-red-700"
                     onClick={() => handleServiceRemove(index)}
+                    className="inline-flex items-center p-1.5 border border-transparent rounded-full text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   >
-                    &times;
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                   </button>
                 </div>
               ))}
@@ -178,76 +216,83 @@ export default function NewProjectForm() {
 
             <button
               type="button"
-              className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               onClick={handleServiceAdd}
+              className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              + Add Product/Service
+              Add Service
             </button>
-
-            <div className="button-group">
-              <button type="button" className="btn btn-secondary" onClick={prevStep}>
-                Previous
-              </button>
-              <button type="button" className="btn btn-primary" onClick={nextStep}>
-                Next
-              </button>
-            </div>
           </div>
-        </div>
 
-        {/* Step 3: Demographics */}
-        <div className={`form-step ${currentStep === 3 ? 'active' : ''}`}>
-          <div className="step-content">
-            <h2 className="step-title">Target Audience</h2>
-            <p className="step-subtitle">Select your target audience details</p>
-
+          {/* Step 3: Demographics */}
+          <div className={`space-y-6 ${currentStep !== 3 && 'hidden'}`}>
             {Object.entries(formData.demographics).map(([category, tags]) => (
-              <div key={category} className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 capitalize mb-2">
-                  {category}:
+              <div key={category} className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700 capitalize">
+                  {category}
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800"
                     >
                       {tag}
                       <button
                         type="button"
-                        className="ml-2 text-blue-600 hover:text-blue-800"
+                        className="ml-2 inline-flex items-center p-0.5 rounded-full text-indigo-600 hover:bg-indigo-200 focus:outline-none"
                         onClick={() => handleTagRemove(category as keyof FormData['demographics'], tag)}
                       >
-                        &times;
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                       </button>
                     </span>
                   ))}
                 </div>
               </div>
             ))}
+          </div>
 
-            <div className="button-group">
-              <button type="button" className="btn btn-secondary" onClick={prevStep}>
+          <div className="mt-8 flex justify-between items-center">
+            {currentStep > 1 && (
+              <button
+                type="button"
+                onClick={prevStep}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
                 Previous
               </button>
+            )}
+            {currentStep < 3 ? (
+              <button
+                type="button"
+                onClick={nextStep}
+                className="ml-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Next
+              </button>
+            ) : (
               <button
                 type="submit"
-                className="btn btn-primary"
                 disabled={isLoading}
+                className="ml-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 {isLoading ? (
                   <>
-                    <div className="loading-spinner" />
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
                     Creating...
                   </>
                 ) : (
                   'Create Project'
                 )}
               </button>
-            </div>
+            )}
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </Modal>
   )
 }
