@@ -2,12 +2,7 @@
 
 import { Fragment } from 'react'
 import {
-  HomeIcon,
-  DocumentTextIcon,
-  ChartBarIcon,
   Cog6ToothIcon,
-  KeyIcon,
-  DocumentDuplicateIcon,
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline'
 import Link from 'next/link'
@@ -19,7 +14,6 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 
 const navigation = [
-  { name: 'Projects', href: '/dashboard/projects', icon: DocumentDuplicateIcon },
   { name: 'Settings', href: '/account-settings', icon: Cog6ToothIcon },
 ]
 
