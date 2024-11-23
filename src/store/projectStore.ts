@@ -21,12 +21,6 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   clearError: () => set({ error: null }),
 
   fetchProjects: async () => {
-    // Don't set loading if we already have projects
-    const currentProjects = get().projects
-    if (currentProjects.length > 0) {
-      return
-    }
-    
     set({ isLoading: true, error: null })
     try {
       const { data: user } = await supabase.auth.getUser()
@@ -39,10 +33,12 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
         .order('created_at', { ascending: false })
 
       if (error) throw error
+      
+      // Always update projects to ensure fresh data
       set({ projects: projects || [], isLoading: false })
     } catch (error) {
+      console.error('Error fetching projects:', error)
       set({ error: error as Error, isLoading: false })
-      throw error
     }
   },
 

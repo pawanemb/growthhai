@@ -15,7 +15,17 @@ export default function DashboardPage() {
   const router = useRouter()
   const { projects, isLoading, error, fetchProjects } = useProjectStore()
 
-  // Set first-time user status immediately on mount
+  // Fetch projects after user is authenticated
+  useEffect(() => {
+    const loadProjects = async () => {
+      if (user && !authLoading) {
+        await fetchProjects()
+      }
+    }
+    loadProjects()
+  }, [user, authLoading, fetchProjects])
+
+  // Set first-time user status
   useEffect(() => {
     const isNewUser = !localStorage.getItem('hasVisitedDashboard')
     setIsFirstTimeUser(isNewUser)
@@ -23,13 +33,6 @@ export default function DashboardPage() {
       setShowProjectCreation(true)
     }
   }, [])
-
-  // Fetch projects after checking first-time status
-  useEffect(() => {
-    if (user) {
-      fetchProjects()
-    }
-  }, [user, fetchProjects])
 
   // Update localStorage after projects are loaded
   useEffect(() => {
