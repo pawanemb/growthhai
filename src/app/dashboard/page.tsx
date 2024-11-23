@@ -10,6 +10,7 @@ import ProjectCreationFlow from '@/components/projects/ProjectCreationFlow'
 
 export default function DashboardPage() {
   const [showProjectCreation, setShowProjectCreation] = useState(false)
+  const [isFirstTimeUser, setIsFirstTimeUser] = useState(true)
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const { projects, isLoading, error, fetchProjects } = useProjectStore()
@@ -19,6 +20,18 @@ export default function DashboardPage() {
       fetchProjects(user.id)
     }
   }, [user, fetchProjects])
+
+  // Set first-time user status when projects are loaded
+  useEffect(() => {
+    if (!isLoading && user) {
+      const isNewUser = !localStorage.getItem('hasVisitedDashboard')
+      if (isNewUser && projects.length === 0) {
+        setShowProjectCreation(true)
+        localStorage.setItem('hasVisitedDashboard', 'true')
+      }
+      setIsFirstTimeUser(isNewUser)
+    }
+  }, [isLoading, user, projects.length])
 
   if (authLoading) {
     return (
@@ -58,13 +71,13 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {projects.length === 0 ? (
+        {projects.length === 0 && !isFirstTimeUser ? (
           <div className="mt-8">
             <div className="text-center">
               <div className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400">
                 <PlusIcon className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-semibold text-gray-900">No projects</h3>
-                <p className="mt-1 text-sm text-gray-500">Get started by creating a new project</p>
+                <h3 className="mt-2 text-sm font-semibold text-gray-900">No projects yet</h3>
+                <p className="mt-1 text-sm text-gray-500">Create a new project to get started</p>
                 <div className="mt-6">
                   <button
                     type="button"
@@ -78,7 +91,7 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
-        ) : (
+        ) : projects.length > 0 ? (
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <button
               onClick={() => setShowProjectCreation(true)}
@@ -120,11 +133,16 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
-        )}
+        ) : null}
       </div>
 
       {showProjectCreation && (
-        <ProjectCreationFlow onClose={() => setShowProjectCreation(false)} />
+        <ProjectCreationFlow 
+          onClose={() => {
+            setShowProjectCreation(false)
+            setIsFirstTimeUser(false)
+          }} 
+        />
       )}
     </div>
   )
