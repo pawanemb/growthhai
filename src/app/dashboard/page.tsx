@@ -7,9 +7,11 @@ import { useProjectStore } from '@/store/projectStore'
 import { formatDistanceToNow } from 'date-fns'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
+import ProjectCreationFlow from '@/components/projects/ProjectCreationFlow'
 
 export default function DashboardPage() {
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false)
+  const [showProjectCreation, setShowProjectCreation] = useState(false)
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const { projects, isLoading, error, fetchProjects } = useProjectStore()
@@ -61,7 +63,18 @@ export default function DashboardPage() {
             </button>
           </div>
         ) : (
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <button
+              onClick={() => setShowProjectCreation(true)}
+              className="p-6 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-500 transition-colors group flex flex-col items-center justify-center text-gray-500 hover:text-blue-500"
+            >
+              <div className="w-12 h-12 mb-4 rounded-full bg-gray-100 group-hover:bg-blue-100 flex items-center justify-center">
+                <PlusIcon className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Add New Project</h3>
+              <p className="text-sm text-center">Create a new project to start managing your content</p>
+            </button>
+
             {projects.map((project) => (
               <div
                 key={project.id}
@@ -99,6 +112,10 @@ export default function DashboardPage() {
           isOpen={isNewProjectModalOpen}
           onClose={() => setIsNewProjectModalOpen(false)}
         />
+      )}
+
+      {showProjectCreation && (
+        <ProjectCreationFlow onClose={() => setShowProjectCreation(false)} />
       )}
     </div>
   )

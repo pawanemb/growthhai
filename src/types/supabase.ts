@@ -48,6 +48,9 @@ export interface Database {
           name: string
           url: string
           description: string | null
+          services: string[]
+          target_region: string | null
+          demographics: Json | null
           user_id: string
         }
         Insert: {
@@ -56,6 +59,9 @@ export interface Database {
           name: string
           url: string
           description?: string | null
+          services?: string[]
+          target_region?: string | null
+          demographics?: Json | null
           user_id: string
         }
         Update: {
@@ -64,68 +70,10 @@ export interface Database {
           name?: string
           url?: string
           description?: string | null
+          services?: string[]
+          target_region?: string | null
+          demographics?: Json | null
           user_id?: string
-        }
-      }
-      keywords: {
-        Row: {
-          id: string
-          created_at: string
-          keyword: string
-          volume: number | null
-          difficulty: number | null
-          project_id: string
-          user_id: string
-        }
-        Insert: {
-          id?: string
-          created_at?: string
-          keyword: string
-          volume?: number | null
-          difficulty?: number | null
-          project_id: string
-          user_id: string
-        }
-        Update: {
-          id?: string
-          created_at?: string
-          keyword?: string
-          volume?: number | null
-          difficulty?: number | null
-          project_id?: string
-          user_id?: string
-        }
-      }
-      blog_posts: {
-        Row: {
-          id: string
-          created_at: string
-          title: string
-          content: string
-          status: 'draft' | 'published'
-          project_id: string
-          user_id: string
-          keyword_id: string | null
-        }
-        Insert: {
-          id?: string
-          created_at?: string
-          title: string
-          content: string
-          status?: 'draft' | 'published'
-          project_id: string
-          user_id: string
-          keyword_id?: string | null
-        }
-        Update: {
-          id?: string
-          created_at?: string
-          title?: string
-          content?: string
-          status?: 'draft' | 'published'
-          project_id?: string
-          user_id?: string
-          keyword_id?: string | null
         }
       }
     }
@@ -139,4 +87,26 @@ export interface Database {
       [_ in never]: never
     }
   }
+}
+
+export type Project = Database['public']['Tables']['projects']['Row']
+export type Profile = Database['public']['Tables']['profiles']['Row']
+
+export interface Keyword {
+  id: string
+  created_at: string
+  keyword: string
+  search_volume: number
+  difficulty: number
+  project_id: string
+}
+
+export interface BlogPost {
+  id: string
+  created_at: string
+  title: string
+  content: string
+  status: 'draft' | 'published'
+  project_id: string
+  keywords: string[]
 }
