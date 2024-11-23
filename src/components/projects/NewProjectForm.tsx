@@ -6,7 +6,6 @@ import { GlobeAltIcon, TagIcon } from '@heroicons/react/24/outline'
 import Modal from '../ui/Modal'
 import { useProjectStore } from '@/store/projectStore'
 import { useAuth } from '@/hooks/useAuth'
-import '../../styles/form.css'
 
 interface NewProjectFormProps {
   isOpen: boolean
@@ -16,14 +15,9 @@ interface NewProjectFormProps {
 interface FormData {
   name: string
   url: string
+  description: string
+  target_region: string
   services: string[]
-  demographics: {
-    age: string[]
-    industry: string[]
-    gender: string[]
-    languages: string[]
-    location: string[]
-  }
 }
 
 export default function NewProjectForm({ isOpen, onClose }: NewProjectFormProps) {
@@ -35,14 +29,9 @@ export default function NewProjectForm({ isOpen, onClose }: NewProjectFormProps)
   const [formData, setFormData] = useState<FormData>({
     name: '',
     url: '',
+    description: '',
+    target_region: '',
     services: [],
-    demographics: {
-      age: [],
-      industry: [],
-      gender: [],
-      languages: [],
-      location: [],
-    },
   })
 
   const handleInputChange = (
@@ -55,62 +44,23 @@ export default function NewProjectForm({ isOpen, onClose }: NewProjectFormProps)
     }))
   }
 
-  const handleServiceAdd = (service: string) => {
-    if (!formData.services.includes(service)) {
-      setFormData((prev) => ({
-        ...prev,
-        services: [...prev.services, service],
-      }))
-    }
-  }
-
-  const handleServiceRemove = (service: string) => {
+  const handleServiceToggle = (service: string) => {
     setFormData((prev) => ({
       ...prev,
-      services: prev.services.filter((s) => s !== service),
+      services: prev.services.includes(service)
+        ? prev.services.filter((s) => s !== service)
+        : [...prev.services, service],
     }))
   }
 
-  const handleDemographicAdd = (
-    category: keyof FormData['demographics'],
-    value: string
-  ) => {
-    if (!formData.demographics[category].includes(value)) {
-      setFormData((prev) => ({
-        ...prev,
-        demographics: {
-          ...prev.demographics,
-          [category]: [...prev.demographics[category], value],
-        },
-      }))
-    }
-  }
-
-  const handleDemographicRemove = (
-    category: keyof FormData['demographics'],
-    value: string
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      demographics: {
-        ...prev.demographics,
-        [category]: prev.demographics[category].filter((v) => v !== value),
-      },
-    }))
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user) return
 
     setIsLoading(true)
-
     try {
       await addProject({
-        name: formData.name,
-        url: formData.url,
-        services: formData.services,
-        demographics: formData.demographics,
+        ...formData,
         user_id: user.id,
       })
       router.refresh()
@@ -122,238 +72,138 @@ export default function NewProjectForm({ isOpen, onClose }: NewProjectFormProps)
     }
   }
 
-  const handleNext = () => {
-    setCurrentStep((prev) => Math.min(prev + 1, 3))
-  }
-
-  const handleBack = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 1))
-  }
+  const services = [
+    'Content Writing',
+    'SEO Optimization',
+    'Keyword Research',
+    'Blog Management',
+    'Technical Writing',
+    'Social Media Content',
+  ]
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create New Project">
-      <div className="mt-4">
-        <div className="mb-8">
-          <div className="relative">
-            <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-100">
-              <div
-                style={{ width: `${(currentStep / 3) * 100}%` }}
-                className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-600 transition-all duration-500"
-              ></div>
-            </div>
-          </div>
-          <div className="flex justify-between text-sm text-gray-600">
-            <span className={currentStep >= 1 ? 'text-indigo-600' : ''}>Project Details</span>
-            <span className={currentStep >= 2 ? 'text-indigo-600' : ''}>Services</span>
-            <span className={currentStep >= 3 ? 'text-indigo-600' : ''}>Target Audience</span>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {currentStep === 1 && (
-            <div className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Project Name
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    required
-                    value={formData.name}
-                    onChange={(e) => handleInputChange(e, 'name')}
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="url" className="block text-sm font-medium text-gray-700">
-                  Website URL
-                </label>
-                <div className="mt-1 flex rounded-md shadow-sm">
-                  <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">
-                    <GlobeAltIcon className="h-4 w-4" />
-                  </span>
-                  <input
-                    type="url"
-                    name="url"
-                    id="url"
-                    required
-                    value={formData.url}
-                    onChange={(e) => handleInputChange(e, 'url')}
-                    className="block w-full rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {currentStep === 2 && (
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Services</label>
-                <div className="mt-2 space-y-4">
-                  <div className="flex flex-wrap gap-2">
-                    {formData.services.map((service, index) => (
-                      <span
-                        key={index}
-                        className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800"
-                      >
-                        {service}
-                        <button
-                          type="button"
-                          onClick={() => handleServiceRemove(service)}
-                          className="ml-1.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-indigo-600 hover:bg-indigo-200 hover:text-indigo-500 focus:bg-indigo-500 focus:text-white focus:outline-none"
-                        >
-                          <span className="sr-only">Remove {service}</span>×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="sm:flex sm:items-start">
+        <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
+          <h3 className="text-lg font-medium leading-6 text-gray-900">
+            Create New Project
+          </h3>
+          <div className="mt-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {currentStep === 1 && (
+                <div className="space-y-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                      Project Name
+                    </label>
                     <input
                       type="text"
-                      placeholder="Add a service"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault()
-                          const input = e.target as HTMLInputElement
-                          if (input.value.trim()) {
-                            handleServiceAdd(input.value.trim())
-                            input.value = ''
-                          }
-                        }
-                      }}
+                      name="name"
+                      id="name"
+                      required
+                      value={formData.name}
+                      onChange={(e) => handleInputChange(e, 'name')}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const input = document.querySelector(
-                          'input[placeholder="Add a service"]'
-                        ) as HTMLInputElement
-                        if (input.value.trim()) {
-                          handleServiceAdd(input.value.trim())
-                          input.value = ''
-                        }
-                      }}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      Add
-                    </button>
+                  </div>
+                  <div>
+                    <label htmlFor="url" className="block text-sm font-medium text-gray-700">
+                      Website URL
+                    </label>
+                    <input
+                      type="url"
+                      name="url"
+                      id="url"
+                      required
+                      value={formData.url}
+                      onChange={(e) => handleInputChange(e, 'url')}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                      Description
+                    </label>
+                    <input
+                      type="text"
+                      name="description"
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) => handleInputChange(e, 'description')}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="target_region" className="block text-sm font-medium text-gray-700">
+                      Target Region
+                    </label>
+                    <input
+                      type="text"
+                      name="target_region"
+                      id="target_region"
+                      value={formData.target_region}
+                      onChange={(e) => handleInputChange(e, 'target_region')}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    />
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
+              )}
 
-          {currentStep === 3 && (
-            <div className="space-y-6">
-              {Object.entries(formData.demographics).map(([category, values]) => (
-                <div key={category}>
-                  <label className="block text-sm font-medium text-gray-700 capitalize">
-                    {category}
+              {currentStep === 2 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-4">
+                    Select Services
                   </label>
-                  <div className="mt-2 space-y-4">
-                    <div className="flex flex-wrap gap-2">
-                      {values.map((value, index) => (
-                        <span
-                          key={index}
-                          className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800"
-                        >
-                          {value}
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleDemographicRemove(
-                                category as keyof FormData['demographics'],
-                                value
-                              )
-                            }
-                            className="ml-1.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-indigo-600 hover:bg-indigo-200 hover:text-indigo-500 focus:bg-indigo-500 focus:text-white focus:outline-none"
-                          >
-                            <span className="sr-only">Remove {value}</span>×
-                          </button>
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        placeholder={`Add ${category}`}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        onKeyPress={(e) => {
-                          if (e.key === 'Enter') {
-                            e.preventDefault()
-                            const input = e.target as HTMLInputElement
-                            if (input.value.trim()) {
-                              handleDemographicAdd(
-                                category as keyof FormData['demographics'],
-                                input.value.trim()
-                              )
-                              input.value = ''
-                            }
-                          }
-                        }}
-                      />
+                  <div className="grid grid-cols-2 gap-4">
+                    {services.map((service) => (
                       <button
+                        key={service}
                         type="button"
-                        onClick={() => {
-                          const input = document.querySelector(
-                            `input[placeholder="Add ${category}"]`
-                          ) as HTMLInputElement
-                          if (input.value.trim()) {
-                            handleDemographicAdd(
-                              category as keyof FormData['demographics'],
-                              input.value.trim()
-                            )
-                            input.value = ''
-                          }
-                        }}
-                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        onClick={() => handleServiceToggle(service)}
+                        className={`${
+                          formData.services.includes(service)
+                            ? 'bg-indigo-100 border-indigo-500 text-indigo-700'
+                            : 'bg-white border-gray-300 text-gray-700'
+                        } border rounded-md px-4 py-2 text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500`}
                       >
-                        Add
+                        {service}
                       </button>
-                    </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              )}
 
-          <div className="mt-6 flex justify-between">
-            {currentStep > 1 && (
-              <button
-                type="button"
-                onClick={handleBack}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Back
-              </button>
-            )}
-            <div className="flex-1"></div>
-            {currentStep < 3 ? (
-              <button
-                type="button"
-                onClick={handleNext}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Next
-              </button>
-            ) : (
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? 'Creating...' : 'Create Project'}
-              </button>
-            )}
+              <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                {currentStep === 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep(2)}
+                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  >
+                    {isLoading ? 'Creating...' : 'Create Project'}
+                  </button>
+                )}
+                {currentStep === 2 && (
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep(1)}
+                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                  >
+                    Back
+                  </button>
+                )}
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </Modal>
   )
