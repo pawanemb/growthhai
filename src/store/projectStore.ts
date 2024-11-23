@@ -46,23 +46,38 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
       const { data: user } = await supabase.auth.getUser()
       if (!user.user) throw new Error('User not authenticated')
 
+      if (!project.name || !project.url) {
+        throw new Error('Project name and URL are required')
+      }
+
       const { data, error } = await supabase.from('projects').insert([
         {
           name: project.name,
           url: project.url,
-          description: project.description || null,
+          description: project.description || '',
           services: project.services || [],
           target_region: project.target_region || null,
-          demographics: project.demographics || null,
+          demographics: project.demographics || {},
           user_id: user.user.id,
         },
       ]).select()
 
-      if (error) throw error
-      if (!data) throw new Error('No data returned from insert')
+      if (error) {
+        console.error('Supabase error:', error)
+        throw new Error(error.message)
+      }
+      
+      if (!data || data.length === 0) {
+        throw new Error('Failed to create project')
+      }
 
       const { projects } = get()
-      set({ projects: [data[0], ...projects], isLoading: false })
+      set({ 
+        projects: [data[0], ...projects],
+        isLoading: false,
+      })
+
+      return data[0]
     } catch (error) {
       set({ error: error as Error, isLoading: false })
       throw error
