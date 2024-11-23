@@ -27,24 +27,35 @@ export const ProjectCreationFlow: React.FC<ProjectCreationFlowProps> = ({ onClos
 
   const handleSubmit = async (data: Partial<Project>) => {
     try {
+      // Validate required fields
+      if (!data.name?.trim()) {
+        throw new Error('Project name is required');
+      }
+      if (!data.url?.trim()) {
+        throw new Error('Project URL is required');
+      }
+
+      // Merge and validate demographics data
       const finalData = {
         ...formData,
         ...data,
-        services: formData.services || [],
-        demographics: formData.demographics || {},
+        services: data.services || formData.services || [],
+        demographics: {
+          ...(formData.demographics || {}),
+          ...(data.demographics || {})
+        },
+        target_region: data.target_region || formData.target_region || '',
       };
-      
-      if (!finalData.name || !finalData.url) {
-        throw new Error('Project name and URL are required');
-      }
 
+      // Create project
       await createProject(finalData);
       toast.success('Project created successfully!');
       onClose();
       router.refresh();
     } catch (error) {
       console.error('Failed to create project:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to create project');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create project';
+      toast.error(errorMessage);
     }
   };
 
