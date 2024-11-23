@@ -31,7 +31,7 @@ export default function DashboardLayout({
     try {
       await supabase.auth.signOut()
       toast.success('Signed out successfully')
-      router.push('/')
+      router.push('/auth/login')
     } catch (error) {
       toast.error('Error signing out')
     }
