@@ -49,95 +49,57 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {isLoading ? (
-          <div className="mt-8 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
-          </div>
-        ) : error ? (
-          <div className="mt-8 rounded-md bg-red-50 p-4">
-            <div className="flex">
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">Error loading projects</h3>
-                <div className="mt-2 text-sm text-red-700">{error}</div>
-              </div>
-            </div>
+        {projects.length === 0 ? (
+          <div className="mt-8">
+            <button
+              onClick={() => setIsNewProjectModalOpen(true)}
+              className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              <PlusIcon className="mx-auto h-12 w-12 text-gray-400" />
+              <span className="mt-2 block text-sm font-semibold text-gray-900">Create your first project</span>
+              <span className="mt-2 block text-sm text-gray-600">Get started by creating a new project to manage your SEO content</span>
+            </button>
           </div>
         ) : (
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project) => {
-              const metadata = project.description ? JSON.parse(project.description) : {}
-              return (
-                <div
-                  key={project.id}
-                  className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-300"
-                >
-                  <div className="p-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-medium text-gray-900">{project.name}</h3>
-                    </div>
-                    <div className="mt-2 flex items-center text-sm text-gray-500">
-                      <GlobeAltIcon className="h-4 w-4 mr-1.5" />
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-indigo-600"
+            {projects.map((project) => (
+              <div
+                key={project.id}
+                className="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between"
+              >
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">{project.name}</h3>
+                  <p className="mt-1 text-sm text-gray-500">{project.description}</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {project.services?.map((service, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
                       >
-                        {project.url}
-                      </a>
-                    </div>
-                    {metadata.services?.length > 0 && (
-                      <div className="mt-4">
-                        <h4 className="text-sm font-medium text-gray-700">Services</h4>
-                        <div className="mt-1 flex flex-wrap gap-2">
-                          {metadata.services.map((service: string, index: number) => (
-                            <span
-                              key={index}
-                              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800"
-                            >
-                              {service}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="bg-gray-50 px-6 py-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm text-gray-500">
-                          Updated {formatDistanceToNow(new Date(project.created_at))} ago
-                        </span>
-                      </div>
-                      <button className="text-indigo-600 hover:text-indigo-900 text-sm font-medium">
-                        View Details
-                      </button>
-                    </div>
+                        {service}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              )
-            })}
-
-            <button
-              onClick={() => setIsNewProjectModalOpen(true)}
-              className="relative h-full rounded-lg border-2 border-dashed border-gray-300 hover:border-indigo-500 bg-white p-12 text-center hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              <div>
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-                  <PlusIcon className="h-6 w-6 text-gray-600" aria-hidden="true" />
+                <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+                  <div className="flex items-center">
+                    <GlobeAltIcon className="h-4 w-4 mr-1" />
+                    <span>{project.target_region || 'Global'}</span>
+                  </div>
+                  <span>Created {formatDistanceToNow(new Date(project.created_at), { addSuffix: true })}</span>
                 </div>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">Create a new project</h3>
-                <p className="mt-1 text-sm text-gray-500">Get started with SEO optimization</p>
               </div>
-            </button>
+            ))}
           </div>
         )}
       </div>
 
-      <NewProjectForm
-        isOpen={isNewProjectModalOpen}
-        onClose={() => setIsNewProjectModalOpen(false)}
-      />
+      {isNewProjectModalOpen && (
+        <NewProjectForm
+          isOpen={isNewProjectModalOpen}
+          onClose={() => setIsNewProjectModalOpen(false)}
+        />
+      )}
     </div>
   )
 }
