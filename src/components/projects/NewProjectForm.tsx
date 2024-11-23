@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { GlobeAltIcon, TagIcon } from '@heroicons/react/24/outline'
 import Modal from '../ui/Modal'
 import '../../styles/form.css'
+import { useProjectStore } from '@/store/projectStore'
 
 interface NewProjectFormProps {
   isOpen: boolean
@@ -26,6 +27,7 @@ interface FormData {
 
 export default function NewProjectForm({ isOpen, onClose }: NewProjectFormProps) {
   const router = useRouter()
+  const addProject = useProjectStore((state) => state.addProject)
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>({
@@ -82,8 +84,12 @@ export default function NewProjectForm({ isOpen, onClose }: NewProjectFormProps)
     setIsLoading(true)
 
     try {
-      // TODO: Implement project creation logic with Supabase
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      addProject({
+        name: formData.name,
+        url: formData.url,
+        services: formData.services,
+        demographics: formData.demographics,
+      })
       router.refresh()
       onClose()
     } catch (error) {

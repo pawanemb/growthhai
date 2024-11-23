@@ -1,19 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { PlusIcon } from '@heroicons/react/24/outline'
+import { PlusIcon, GlobeAltIcon } from '@heroicons/react/24/outline'
 import NewProjectForm from '@/components/projects/NewProjectForm'
-import Link from 'next/link'
-import { Card } from '@/components/ui/card'
+import { useProjectStore } from '@/store/projectStore'
+import { formatDistanceToNow } from 'date-fns'
 
 export default function DashboardPage() {
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false)
+  const projects = useProjectStore((state) => state.projects)
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-900">My Projects</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
           <button
             type="button"
             onClick={() => setIsNewProjectModalOpen(true)}
@@ -26,48 +27,81 @@ export default function DashboardPage() {
 
         {/* Project Grid */}
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Sample Project Cards */}
-          <Link href="/dashboard/projects/1">
-            <Card className="group overflow-hidden transition-all duration-200 hover:shadow-lg hover:ring-2 hover:ring-blue-500 hover:ring-offset-2">
-              <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-blue-500 to-purple-600">
-                <div className="flex items-center justify-center p-6">
-                  <span className="text-3xl font-bold text-white">SP</span>
-                </div>
-              </div>
+          {projects.map((project) => (
+            <div
+              key={project.id}
+              className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-300"
+            >
               <div className="p-6">
-                <h3 className="text-lg font-medium text-gray-900 group-hover:text-blue-600">
-                  Sample Project
-                </h3>
-                <p className="mt-2 text-sm text-gray-500">example.com</p>
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                    Active
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium text-gray-900">{project.name}</h3>
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      project.status === 'active'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
+                    {project.status}
                   </span>
-                  <div className="flex items-center text-sm text-gray-500">
-                    <span>3 modules active</span>
-                  </div>
+                </div>
+                <div className="mt-2 flex items-center text-sm text-gray-500">
+                  <GlobeAltIcon className="h-4 w-4 mr-1.5" />
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-indigo-600"
+                  >
+                    {project.url}
+                  </a>
+                </div>
+                <div className="mt-4 space-y-2">
+                  {project.services.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-700">Services</h4>
+                      <div className="mt-1 flex flex-wrap gap-2">
+                        {project.services.map((service, index) => (
+                          <span
+                            key={index}
+                            className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800"
+                          >
+                            {service}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-            </Card>
-          </Link>
+              <div className="bg-gray-50 px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-500">
+                      Updated {formatDistanceToNow(new Date(project.updatedAt))} ago
+                    </span>
+                  </div>
+                  <button className="text-indigo-600 hover:text-indigo-900 text-sm font-medium">
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
 
           {/* Create New Project Card */}
-          <Link href="/dashboard/projects/new">
-            <Card className="group relative overflow-hidden transition-all duration-200 hover:shadow-lg hover:ring-2 hover:ring-blue-500 hover:ring-offset-2">
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 opacity-50"></div>
-              <div className="relative flex h-full flex-col items-center justify-center p-8 text-center">
-                <div className="rounded-full bg-white p-3 shadow-md">
-                  <PlusIcon className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="mt-4 text-lg font-medium text-gray-900">
-                  Create new project
-                </h3>
-                <p className="mt-2 text-sm text-gray-500">
-                  Start tracking a new website
-                </p>
+          <button
+            onClick={() => setIsNewProjectModalOpen(true)}
+            className="relative h-full rounded-lg border-2 border-dashed border-gray-300 hover:border-indigo-500 bg-white p-12 text-center hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            <div>
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+                <PlusIcon className="h-6 w-6 text-gray-600" aria-hidden="true" />
               </div>
-            </Card>
-          </Link>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">Create a new project</h3>
+              <p className="mt-1 text-sm text-gray-500">Get started with SEO optimization</p>
+            </div>
+          </button>
         </div>
       </div>
 
