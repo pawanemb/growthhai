@@ -17,18 +17,25 @@ export default function DashboardPage() {
   const { projects, isLoading, error, fetchProjects } = useProjectStore()
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      router.replace('/auth/login')
-    }
-  }, [authLoading, user, router])
-
-  useEffect(() => {
     if (user) {
       fetchProjects(user.id)
     }
   }, [user, fetchProjects])
 
-  if (authLoading || !user) {
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    router.replace('/auth/login')
+    return null
+  }
+
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
@@ -41,26 +48,21 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
-          <button
-            type="button"
-            onClick={() => setIsNewProjectModalOpen(true)}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            <PlusIcon className="h-5 w-5 mr-2" />
-            New Project
-          </button>
+          {projects.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setIsNewProjectModalOpen(true)}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <PlusIcon className="h-5 w-5 mr-2" />
+              New Project
+            </button>
+          )}
         </div>
 
         {projects.length === 0 ? (
           <div className="mt-8">
-            <button
-              onClick={() => setIsNewProjectModalOpen(true)}
-              className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              <PlusIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <span className="mt-2 block text-sm font-semibold text-gray-900">Create your first project</span>
-              <span className="mt-2 block text-sm text-gray-600">Get started by creating a new project to manage your SEO content</span>
-            </button>
+            <NewProjectForm isOpen={true} onClose={() => {}} />
           </div>
         ) : (
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -107,7 +109,7 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {isNewProjectModalOpen && (
+      {projects.length > 0 && isNewProjectModalOpen && (
         <NewProjectForm
           isOpen={isNewProjectModalOpen}
           onClose={() => setIsNewProjectModalOpen(false)}
