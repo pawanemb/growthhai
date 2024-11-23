@@ -14,7 +14,7 @@ export default function ProjectsPage() {
         </div>
         <Link
           href="/dashboard/projects/new"
-          className="flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 shadow-sm transition-all duration-200 hover:shadow-md"
         >
           <PlusIcon className="mr-2 h-5 w-5" />
           New Project
@@ -22,37 +22,44 @@ export default function ProjectsPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {/* Sample Project Card */}
-        <Card className="hover:border-blue-500 hover:shadow-md">
-          <div className="p-6">
-            <h3 className="text-lg font-medium text-gray-900">Sample Project</h3>
-            <p className="mt-2 text-sm text-gray-500">example.com</p>
-            <div className="mt-4 flex items-center justify-between">
-              <div className="flex items-center space-x-2">
+        {/* Sample Project Cards */}
+        <Link href="/dashboard/projects/1">
+          <Card className="group overflow-hidden transition-all duration-200 hover:shadow-lg hover:ring-2 hover:ring-blue-500 hover:ring-offset-2">
+            <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-blue-500 to-purple-600">
+              <div className="flex items-center justify-center p-6">
+                <span className="text-3xl font-bold text-white">SP</span>
+              </div>
+            </div>
+            <div className="p-6">
+              <h3 className="text-lg font-medium text-gray-900 group-hover:text-blue-600">
+                Sample Project
+              </h3>
+              <p className="mt-2 text-sm text-gray-500">example.com</p>
+              <div className="mt-4 flex items-center justify-between">
                 <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
                   Active
                 </span>
+                <div className="flex items-center text-sm text-gray-500">
+                  <span>3 modules active</span>
+                </div>
               </div>
-              <Link
-                href="/dashboard/projects/1"
-                className="text-sm font-medium text-blue-600 hover:text-blue-500"
-              >
-                View Details
-              </Link>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </Link>
 
         {/* Create New Project Card */}
         <Link href="/dashboard/projects/new">
-          <Card className="flex h-full items-center justify-center border-2 border-dashed border-gray-300 bg-white px-6 py-10 hover:border-blue-500 hover:shadow-md">
-            <div className="text-center">
-              <PlusIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">
+          <Card className="group relative overflow-hidden transition-all duration-200 hover:shadow-lg hover:ring-2 hover:ring-blue-500 hover:ring-offset-2">
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 opacity-50"></div>
+            <div className="relative flex h-full flex-col items-center justify-center p-8 text-center">
+              <div className="rounded-full bg-white p-3 shadow-md">
+                <PlusIcon className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="mt-4 text-lg font-medium text-gray-900">
                 Create new project
               </h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Add a new website to track
+              <p className="mt-2 text-sm text-gray-500">
+                Start tracking a new website
               </p>
             </div>
           </Card>
